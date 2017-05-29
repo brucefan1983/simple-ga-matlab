@@ -9,12 +9,13 @@ A 50-line MATLAB implementation of a simple genetic algorithm (GA) with real-val
   
 ## File organizations
 
-* There is one script with name:
+* There is one script:
   * test_ga.m
 
-* This script will call the functions defined in following files:
+* This script will call the "my_ga" function in
   * my_ga.m
-  * initialize_velocity.m
+  
+* The above function will in turn call the "my_fitness" function in
   * my_fitness.m
   
 ## Example
