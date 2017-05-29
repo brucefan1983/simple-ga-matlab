@@ -22,7 +22,7 @@ A 50-line MATLAB implementation of a simple genetic algorithm (GA) with real-val
 
 * The cost (fitness) function defined in the "my_fitness" function is 
    ```math 
-   y = (x_1 - 1)^2 + (x_2 - 2)^2 + ...
+   $y = (x_1 - 1)^2 + (x_2 - 2)^2 + ...$
    ```
   We know that the "correct solution" is 
    ```math 
