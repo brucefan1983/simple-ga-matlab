@@ -5,7 +5,8 @@ A 50-line MATLAB implementation of a simple genetic algorithm (GA) with real-val
 ## Features
 
 * This is a small but working GA code, which is particularly useful to beginners. 
-  Actually, I have used it in one of my published journal articles. 
+  Actually, I have used it to optimize a functional (a function of a function) 
+  in one of my published journal articles. 
   
 ## File organizations
 
@@ -29,7 +30,7 @@ A 50-line MATLAB implementation of a simple genetic algorithm (GA) with real-val
       x_i = i (i = 1, 2, ...).
   ```
   
-* Running the "test_ga.m" script in MATLAB, two figures will show up after a few seconds.
+* Running the "test_ga.m" script in Matlab, two figures will show up after a few seconds:
   * The first figure shows the evolution of the cost function with respect to the generation.
   * The second figure shows the evolution of the elite (best solution) with respect to the generation.
     As expected, the best solution converges to the correct solution.
