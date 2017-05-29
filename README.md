@@ -21,7 +21,10 @@ A 50-line MATLAB implementation of a simple genetic algorithm (GA) with real-val
 ## Example
 
 * The cost (fitness) function defined in the "my_fitness" function is 
-  y = (x_1 - 1)^2 + (x_2 - 2)^2 + ... 
+   ```math 
+   y = (x_1 - 1)^2 + (x_2 - 2)^2 + ...
+   ```
+   
   We know that the best solution is x_i = i (i = 1, 2, ...)
 
 * Running the "test_ga.m" script in MATLAB, two figures will show up after a few seconds.
