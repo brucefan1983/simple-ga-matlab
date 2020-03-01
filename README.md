@@ -37,4 +37,4 @@ A 50-line MATLAB implementation of a simple genetic algorithm (GA) with real-val
 
 ## Contact
 
-* Zheyong Fan: brucenju(at)gmail.com; zheyong.fan(at)aalto.fi; zheyongfan(at)163.com
+* Zheyong Fan: brucenju(at)gmail.com
