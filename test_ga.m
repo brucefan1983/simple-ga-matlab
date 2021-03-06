@@ -1,7 +1,7 @@
 clear; close all;
 
 % Call my_ga to evolve
-[best_fitness, elite, generation] = my_ga(10, 'my_fitness', 100, 50, 0.1, 10000, 1.0e-4);
+[best_fitness, elite, generation] = my_ga(10, 'my_fitness', 100, 50, 0.1, 1000, 1.0e-10);
 
 % Decode according to the fitness function
 best_solution = (2 * elite(1 : generation, :) - 1) * 20; 
