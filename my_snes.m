@@ -11,11 +11,8 @@ for generation = 1 : maximal_generation
     population = repmat(mu, population_size, 1) + repmat(sigma, population_size, 1) .* s;
     cost = feval(fitness_function, population);
     [cost, index] = sort(cost);
-    
     best_fitness(generation) = cost(1);
-    
     elite(generation, :) = population(1, :);
-    disp(elite(generation, :))
     if best_fitness(generation) < minimal_cost; break; end
     s = s(index(1 : parent_number), :);
     mu = mu + learn_rates(1) * sigma .* (utility * s); % update mean
