@@ -1,0 +1,27 @@
+function [y, U] = ann_snes(population)
+x0 = 1 : 0.01 : 3;
+%U0 = 0.5*(x0-2).^2 + 1/6*(x0-2).^3 - 0.25;
+U0 = 1./x0.^12 - 1./x0.^6;
+N_samples = length(x0);
+N_neurons = 10;
+N_pop = size(population, 1);
+y = zeros(N_pop, 1);
+U = zeros(N_pop, N_samples);
+for n_pop = 1 : N_pop
+    para = population(n_pop, :);
+    u = para(1:N_neurons)';
+    offset = N_neurons;
+    v = reshape(para(offset+1 : offset + N_neurons*N_neurons), N_neurons, N_neurons);
+    offset = offset + N_neurons*N_neurons;
+    w = para(offset+1 : offset + N_neurons);
+    offset = offset + N_neurons;
+    a = para(offset+1 : offset + N_neurons)';
+    offset = offset + N_neurons;
+    b = para(offset+1 : offset + N_neurons)';
+    c = para(end);
+    for n_sample = 1 : N_samples % loop over the samples
+        U(n_pop, n_sample) = w * tanh(v * tanh(u * x0(n_sample) - a) - b) - c;
+    end
+    y(n_pop) = 0.5 * mean((U(n_pop, :) - U0).^2) ...
+        + 1.0e-5 * 0.5 * sum(para.^2) + 1.0e-5 * sum(abs(para));
+end
