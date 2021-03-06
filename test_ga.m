@@ -1,10 +1,12 @@
 clear; close all;
 
 % Call my_ga to evolve
-[best_fitness, elite, generation] = my_ga(10, 'fitness_ga', 100, 50, 0.1, 1000, 1.0e-10);
+N_neurons = 10;
+dim = N_neurons*(N_neurons+4)+1;
+[best_fitness, elite, generation] = my_ga(dim, 'ann_ga', 20, 10, 0.01, 10000, 1.0e-10);
 
 % Decode according to the fitness function
-best_solution = (2 * elite(1 : generation, :) - 1) * 20; 
+best_solution = (2 * elite(1 : generation, :) - 1) * 10; 
 
 % Evolution of the best fitness:
 figure
@@ -19,3 +21,12 @@ semilogx(1 : generation, best_solution)
 xlabel('Generation','fontsize',12);
 ylabel('Best Solution','fontsize',12);
 set(gca,'fontsize',12,'ticklength',get(gca,'ticklength')*2);
+
+% compare with the training set:
+x0 = 1 : 0.01 : 3;
+U0 = 1./x0.^12 - 1./x0.^6;
+[y, U] = ann_ga(elite);
+figure;
+plot(x0, U0, 'o'); hold on;
+plot(x0, U(end, :), '-');
+
