@@ -6,7 +6,6 @@ elite = zeros(maximal_generation, number_of_variables);
 child_number = population_size - parent_number;
 population = rand(population_size, number_of_variables); % values in [0, 1]
 for generation = 1 : maximal_generation
-    if mod(generation, 100) == 0; disp(generation); end;
     cost = ann(population, 20, -10);
     [cost, index] = sort(cost);
     population = population(index(1:parent_number), :);
@@ -32,4 +31,5 @@ for generation = 1 : maximal_generation
     mutation_points = ceil(number_of_elements * rand(1, number_of_mutations));
     mutation_population(mutation_points) = rand(1, number_of_mutations);
     population(2:population_size, :) = mutation_population;
+    if mod(generation, 100) == 0; disp(generation); disp(best_fitness(generation)); end
 end

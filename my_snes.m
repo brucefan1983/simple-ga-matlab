@@ -8,7 +8,6 @@ learn_rates = [1, (3 + log(number_of_variables))/(5 * sqrt(number_of_variables))
 utility = max(0, log(population_size/2+1)-log(1:population_size));
 utility = utility / sum(utility) - 1/population_size; % sum of utility is zero
 for generation = 1 : maximal_generation
-    if mod(generation, 100) == 0; disp(generation); end;
     s = randn(population_size, number_of_variables);
     population = repmat(mu, population_size, 1) + repmat(sigma, population_size, 1) .* s;
     cost = ann(population, 1, 0);
@@ -18,4 +17,5 @@ for generation = 1 : maximal_generation
     s = s(index, :);
     mu = mu + learn_rates(1) * sigma .* (utility * s); % update mean
     sigma = sigma .* exp(learn_rates(2) * (utility * (s .* s - 1))); % update variance
+    if mod(generation, 100) == 0; disp(generation); disp(best_fitness(generation)); end;
 end
