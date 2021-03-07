@@ -3,7 +3,7 @@ clear; close all;
 % Call my_ga to evolve
 N_neurons = 10;
 dim = N_neurons*(N_neurons+4)+1;
-[best_fitness, elite, generation] = my_ga(dim, 'ann_ga', 20, 10, 0.01, 10000, 1.0e-10);
+[best_fitness, elite, generation] = my_ga(dim, 20, 10, 0.01, 10000);
 
 % Decode according to the fitness function
 best_solution = (2 * elite(1 : generation, :) - 1) * 10; 
@@ -25,7 +25,7 @@ set(gca,'fontsize',12,'ticklength',get(gca,'ticklength')*2);
 % compare with the training set:
 x0 = 1 : 0.01 : 3;
 U0 = 1./x0.^12 - 1./x0.^6;
-[y, U] = ann_ga(elite);
+[y, U] = ann(elite, 20, -10);
 figure;
 plot(x0, U0, 'o'); hold on;
 plot(x0, U(end, :), '-');

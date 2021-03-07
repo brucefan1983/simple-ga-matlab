@@ -1,17 +1,17 @@
-function [best_fitness, elite, generation] = my_ga(number_of_variables, fitness_function, ...
-    population_size, parent_number, mutation_rate, maximal_generation, minimal_cost)
+function [best_fitness, elite, generation] = my_ga(number_of_variables, ...
+    population_size, parent_number, mutation_rate, maximal_generation)
 cumulative_probabilities = cumsum((parent_number:-1:1) / sum(parent_number:-1:1));
 best_fitness = ones(maximal_generation, 1);
 elite = zeros(maximal_generation, number_of_variables);
 child_number = population_size - parent_number;
 population = rand(population_size, number_of_variables); % values in [0, 1]
 for generation = 1 : maximal_generation
-    cost = feval(fitness_function, population);
+    if mod(generation, 100) == 0; disp(generation); end;
+    cost = ann(population, 20, -10);
     [cost, index] = sort(cost);
     population = population(index(1:parent_number), :);
     best_fitness(generation) = cost(1);
     elite(generation, :) = population(1, :);
-    if best_fitness(generation) < minimal_cost; break; end
     for child = 1:2:child_number % crossover
         mother = min(find(cumulative_probabilities > rand));
         father = min(find(cumulative_probabilities > rand));

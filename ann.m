@@ -1,6 +1,7 @@
-function [y, U] = ann_ga(population)
-population = (2 * population - 1) * 10;
+function [y, U] = ann(population, scale, bias)
+population = scale * population + bias;
 x0 = 1 : 0.01 : 3;
+%U0 = 0.5*(x0-2).^2 + 1/6*(x0-2).^3 - 0.25;
 U0 = 1./x0.^12 - 1./x0.^6;
 N_samples = length(x0);
 N_neurons = 10;
