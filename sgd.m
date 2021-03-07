@@ -1,41 +1,70 @@
-clear; close all;
+clear; %close all;
+
+use_batch = false;
+
+% the training data set
 x0 = 1 : 0.01 : 3;
-U0 = 1./x0.^12 - 1./x0.^6;
+U0 = 1 ./ x0.^12 - 1 ./ x0.^6;
 N_samples = length(x0);
-N_neurons = 5;
-u = (rand(N_neurons, 1) - 0.5)/sqrt(N_neurons);
-v = (rand(N_neurons, N_neurons) - 0.5)/sqrt(N_neurons);
-w = (rand(1, N_neurons) - 0.5)/sqrt(N_neurons);
-a = (rand(N_neurons, 1) - 0.5)/sqrt(N_neurons);
-b = (rand(N_neurons, 1) - 0.5)/sqrt(N_neurons);
-c = rand - 0.5;
-learning_rate = 0.01; % the learning rate
+U = zeros(1, N_samples);
+
+% initialize the NN parameters
+N_neurons = 10; % 1-10-10-1 NN
+u = (rand(N_neurons, 1) - 0.5)*5;
+v = (rand(N_neurons, N_neurons) - 0.5)*5;
+w = (rand(1, N_neurons) - 0.5)*5;
+a = (rand(N_neurons, 1) - 0.5)*5;
+b = (rand(N_neurons, 1) - 0.5)*5;
+c = (rand - 0.5)*5;
+
+learning_rate = 0.01; % should be relatively large for batch GD
+if use_batch
+    learning_rate = 0.1;
+end
+
 N_steps = 100000;
 rmse_U = zeros(N_steps, 1);
-for step = 1 : N_steps % loop over the training steps
-    if mod(step, 1000) == 0; disp(step); end;
-    x = x0; % input layer
-    y = zeros(N_neurons, N_samples); % 1st hidden layer
-    yd = zeros(N_neurons, N_samples); % 1st hidden layer
-    z = zeros(N_neurons, N_samples); % 2nd hidden layer
-    zd = zeros(N_neurons, N_samples); % 2nd hidden layer
-    U = zeros(1, N_samples); % output layer
-    Ud = zeros(1, N_samples); % output layer
-    for n_sample = 1 : N_samples % loop over the samples
-        y(:, n_sample) = tanh(u * x(n_sample) - a);
-        yd(:, n_sample) = 1 - y(:, n_sample) .* y(:, n_sample);
-        z(:, n_sample) = tanh(v * y(:, n_sample) - b);
-        zd(:, n_sample) = 1 - z(:, n_sample) .* z(:, n_sample);
-        U(n_sample) = w * z(:, n_sample) - c;
-        Ud(n_sample) = w * zd(:, n_sample);
+for step = 1 : N_steps
+    % derivatives of the error wrt weights and biases
+    dEdw = zeros(1, N_neurons);
+    dEdv = zeros(N_neurons, N_neurons);
+    dEdu = zeros(N_neurons, 1);
+    dEdc = 0;
+    dEdb = zeros(N_neurons, 1);
+    dEda = zeros(N_neurons, 1);
+    for n_sample = 1 : N_samples
+        % propagate the NN forward
+        y = tanh(u * x0(n_sample) - a);
+        yd = 1 - y .* y;
+        z = tanh(v * y - b);
+        zd = 1 - z .* z;
+        U(n_sample) = w * z - c;
+        % calculate the derivatives
         deltaU = U(n_sample) - U0(n_sample);
-        dEdw = deltaU * z(:, n_sample).';
-        dEdc = -deltaU;
-        dEdv = deltaU * (w.' .* zd(:, n_sample)) * y(:, n_sample).';
-        dEdb = -deltaU * w.' .* zd(:, n_sample);
-        dEdu = deltaU * x(n_sample) * yd(:, n_sample) .* (v.' * zd(:, n_sample) .* w.');
-        dEda = -deltaU * yd(:, n_sample) .* (v.' * zd(:, n_sample) .* w.');
-        eta = learning_rate;
+        dEdw0 = deltaU * z.';
+        dEdc0 = - deltaU;
+        dEdv0 = deltaU * (w.' .* zd) * y.';
+        dEdb0 = - deltaU * w.' .* zd;
+        dEdu0 = deltaU * x0(n_sample) * yd .* (v.' * zd .* w.');
+        dEda0 = - deltaU * yd .* (v.' * zd .* w.');
+        if use_batch
+            dEdw = dEdw + dEdw0;
+            dEdc = dEdc + dEdc0;
+            dEdv = dEdv + dEdv0;
+            dEdb = dEdb + dEdb0;
+            dEdu = dEdu + dEdu0;
+            dEda = dEda + dEda0;
+        else
+            u = u - learning_rate * dEdu0;
+            v = v - learning_rate * dEdv0;
+            w = w - learning_rate * dEdw0;
+            a = a - learning_rate * dEda0;
+            b = b - learning_rate * dEdb0;
+            c = c - learning_rate * dEdc0;
+        end
+    end
+    if use_batch
+        eta = learning_rate  / N_samples;
         u = u - eta * dEdu;
         v = v - eta * dEdv;
         w = w - eta * dEdw;
@@ -43,13 +72,16 @@ for step = 1 : N_steps % loop over the training steps
         b = b - eta * dEdb;
         c = c - eta * dEdc;
     end
+    
     rmse_U(step) = sqrt(mean((U - U0).^2));
+    if mod(step, 1000) == 0; disp(step); disp(rmse_U(step)); end;
 end
 
 figure;
-plot(1:N_steps, rmse_U, '-');
-xlabel('Step', 'fontsize', 15);
-ylabel('Loss', 'fontsize', 15);
+semilogy(1:N_steps, rmse_U, '-');
+
+figure;
+plot(u); hold on;plot(v);plot(w);plot(a);plot(b);plot(c);
 
 figure;
 plot(x0, U0, 'ro');
