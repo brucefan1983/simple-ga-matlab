@@ -17,5 +17,7 @@ for generation = 1 : maximal_generation
     s = s(index, :);
     mu = mu + learn_rates(1) * sigma .* (utility * s); % update mean
     sigma = sigma .* exp(learn_rates(2) * (utility * (s .* s - 1))); % update variance
-    if mod(generation, 100) == 0; disp(generation); disp(best_fitness(generation)); end;
+    if mod(generation, 100) == 0
+        disp(['Generation = ', num2str(generation), ', best fitness = ', num2str(cost(1))]);
+    end
 end

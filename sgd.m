@@ -74,7 +74,9 @@ for step = 1 : N_steps
     end
     
     rmse_U(step) = sqrt(mean((U - U0).^2));
-    if mod(step, 1000) == 0; disp(step); disp(rmse_U(step)); end;
+    if mod(step, 1000) == 0
+        disp(['Step = ', num2str(step), ', best fitness = ', num2str(rmse_U(step))]);
+    end
 end
 
 figure;

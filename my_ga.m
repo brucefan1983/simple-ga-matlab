@@ -31,5 +31,7 @@ for generation = 1 : maximal_generation
     mutation_points = ceil(number_of_elements * rand(1, number_of_mutations));
     mutation_population(mutation_points) = rand(1, number_of_mutations);
     population(2:population_size, :) = mutation_population;
-    if mod(generation, 100) == 0; disp(generation); disp(best_fitness(generation)); end
+    if mod(generation, 100) == 0
+        disp(['Generation = ', num2str(generation), ', best fitness = ', num2str(cost(1))]);
+    end
 end
