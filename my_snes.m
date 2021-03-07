@@ -1,11 +1,12 @@
-function [best_fitness, elite] = my_snes(number_of_variables, fitness_function, ...
-    population_size, parent_number, maximal_generation)
+function [best_fitness, elite] = my_snes(number_of_variables, fitness_function, maximal_generation)
+population_size = 4 + floor(3 * log(number_of_variables));
 best_fitness = ones(maximal_generation, 1);
 elite = zeros(maximal_generation, number_of_variables);
 mu = 2*rand(1, number_of_variables)-1; % initial mean
 sigma = ones(1, number_of_variables); % initial variance
 learn_rates = [1, (3 + log(number_of_variables))/(5 * sqrt(number_of_variables)) / 2];
-utility = (parent_number:-1:1) / sum(parent_number:-1:1);
+utility = max(0, log(population_size/2+1)-log(1:population_size));
+utility = utility / sum(utility) - 1/population_size; % sum of utility is zero
 for generation = 1 : maximal_generation
     if mod(generation, 100) == 0; disp(generation); end;
     s = randn(population_size, number_of_variables);
@@ -14,7 +15,7 @@ for generation = 1 : maximal_generation
     [cost, index] = sort(cost);
     best_fitness(generation) = cost(1);
     elite(generation, :) = population(1, :);
-    s = s(index(1 : parent_number), :);
+    s = s(index, :);
     mu = mu + learn_rates(1) * sigma .* (utility * s); % update mean
     sigma = sigma .* exp(learn_rates(2) * (utility * (s .* s - 1))); % update variance
 end
