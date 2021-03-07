@@ -4,8 +4,8 @@ use_batch = false;
 
 % the training data set
 x0 = 1 : 0.01 : 3;
-U0 = 1 ./ x0.^12 - 1 ./ x0.^6;
 N_samples = length(x0);
+U0 = 10./x0.^12 - 10./x0.^6 + rand(1, N_samples) * 0.1;
 U = zeros(1, N_samples);
 
 % initialize the NN parameters

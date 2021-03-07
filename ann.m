@@ -1,9 +1,8 @@
-function [y, U] = ann(population, scale, bias)
+function [y, U, U0] = ann(population, scale, bias)
 population = scale * population + bias;
 x0 = 1 : 0.01 : 3;
-%U0 = 0.5*(x0-2).^2 + 1/6*(x0-2).^3 - 0.25;
-U0 = 1./x0.^12 - 1./x0.^6;
 N_samples = length(x0);
+U0 = 10./x0.^12 - 10./x0.^6 + rand(1, N_samples) * 0.1;
 N_neurons = 10;
 N_pop = size(population, 1);
 y = zeros(N_pop, 1);

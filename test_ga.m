@@ -24,8 +24,7 @@ set(gca,'fontsize',12,'ticklength',get(gca,'ticklength')*2);
 
 % compare with the training set:
 x0 = 1 : 0.01 : 3;
-U0 = 1./x0.^12 - 1./x0.^6;
-[y, U] = ann(elite, 20, -10);
+[y, U, U0] = ann(elite, 20, -10);
 figure;
 plot(x0, U0, 'o'); hold on;
 plot(x0, U(end, :), '-');
